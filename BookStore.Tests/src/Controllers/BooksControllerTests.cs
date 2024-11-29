@@ -19,7 +19,7 @@ public class BooksControllerTests
     }
 
     [Fact]
-    public async Task GetAllBooks_ReturnsOkResult_WithListOfBooks()
+    public async Task GetAllBooks_ReturnsOkResultWithBooks()
     {
         // Arrange
         var books = new List<Book>
@@ -27,24 +27,38 @@ public class BooksControllerTests
             new Book { Id = "1", Title = "Sample Book 1" },
             new Book { Id = "2", Title = "Sample Book 2" }
         };
-
-        _bookServiceMock.Setup(service => service.GetAllBooksAsync())
-            .ReturnsAsync(books);
+        _bookServiceMock.Setup(s => s.GetAllBooksAsync(1, 5)).ReturnsAsync(books);
+        _bookServiceMock.Setup(s => s.GetTotalBooksAsync()).ReturnsAsync(1);
 
         // Act
-        var result = await _controller.GetAllBooks();
+        var result = await _controller.GetAllBooks(1, 5);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var returnedBooks = Assert.IsType<List<Book>>(okResult.Value);
-        Assert.Equal(2, returnedBooks.Count);
+        var value = okResult.Value;
+
+        // Check anonymous object properties
+        Assert.NotNull(value);
+        Assert.Equal(2, value.GetType().GetProperties().Length);
+
+        // Check books property
+        var booksProperty = value.GetType().GetProperty("books");
+        Assert.NotNull(booksProperty);
+        Assert.Equal(typeof(List<Book>), booksProperty.PropertyType);
+        Assert.Equal(books, booksProperty.GetValue(value));
+
+        // Check totalBooks property
+        var totalBooksProperty = value.GetType().GetProperty("totalBooks");
+        Assert.NotNull(totalBooksProperty);
+        Assert.Equal(typeof(int), totalBooksProperty.PropertyType);
+        Assert.Equal(1, totalBooksProperty.GetValue(value));
     }
 
     [Fact]
     public async Task GetAllBooks_ReturnsInternalServerError_OnException()
     {
         // Arrange
-        _bookServiceMock.Setup(service => service.GetAllBooksAsync())
+        _bookServiceMock.Setup(service => service.GetAllBooksAsync(1,5))
             .ThrowsAsync(new Exception("Database error"));
 
         // Act
