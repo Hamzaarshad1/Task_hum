@@ -1,0 +1,208 @@
+[{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544b9"
+  },
+  "title": "The Great Gatsby",
+  "author": "F. Scott Fitzgerald",
+  "price": 1925
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544ba"
+  },
+  "title": "To Kill a Mockingbird",
+  "author": "Harper Lee",
+  "price": 1960
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544bb"
+  },
+  "title": "1984",
+  "author": "George Orwell",
+  "price": 1949
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544bc"
+  },
+  "title": "The Catcher in the Rye",
+  "author": "J.D. Salinger",
+  "price": 1951
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544bd"
+  },
+  "title": "The Hobbit",
+  "author": "J.R.R. Tolkien",
+  "price": 1937
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544be"
+  },
+  "title": "Brave New World",
+  "author": "Aldous Huxley",
+  "price": 1932
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544bf"
+  },
+  "title": "The Lord of the Rings",
+  "author": "J.R.R. Tolkien",
+  "price": 1954
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544c0"
+  },
+  "title": "Animal Farm",
+  "author": "George Orwell",
+  "price": 1945
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544c1"
+  },
+  "title": "The Da Vinci Code",
+  "author": "Dan Brown",
+  "price": 2003
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544c2"
+  },
+  "title": "The Alchemist",
+  "author": "Paulo Coelho",
+  "price": 1988
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544c3"
+  },
+  "title": "The Hunger Games",
+  "author": "Suzanne Collins",
+  "price": 2008
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544c4"
+  },
+  "title": "To Kill a Mockingbird",
+  "author": "Harper Lee",
+  "price": 12.99
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544c5"
+  },
+  "title": "1984",
+  "author": "George Orwell",
+  "price": 10.99
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544c6"
+  },
+  "title": "The Great Gatsby",
+  "author": "F. Scott Fitzgerald",
+  "price": 11.99
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544c7"
+  },
+  "title": "Pride and Prejudice",
+  "author": "Jane Austen",
+  "price": 9.99
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544c8"
+  },
+  "title": "The Catcher in the Rye",
+  "author": "J.D. Salinger",
+  "price": 13.99
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544c9"
+  },
+  "title": "The Hobbit",
+  "author": "J.R.R. Tolkien",
+  "price": 14.99
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544ca"
+  },
+  "title": "Brave New World",
+  "author": "Aldous Huxley",
+  "price": 12.99
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544cb"
+  },
+  "title": "The Lord of the Rings",
+  "author": "J.R.R. Tolkien",
+  "price": 24.99
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544cc"
+  },
+  "title": "Animal Farm",
+  "author": "George Orwell",
+  "price": 9.99
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544cd"
+  },
+  "title": "The Da Vinci Code",
+  "author": "Dan Brown",
+  "price": 15.99
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544ce"
+  },
+  "title": "The Alchemist",
+  "author": "Paulo Coelho",
+  "price": 11.99
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544cf"
+  },
+  "title": "The Hunger Games",
+  "author": "Suzanne Collins",
+  "price": 13.99
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544d0"
+  },
+  "title": "The Kite Runner",
+  "author": "Khaled Hosseini",
+  "price": 12.99
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544d1"
+  },
+  "title": "The Help",
+  "author": "Kathryn Stockett",
+  "price": 11.99
+},
+{
+  "_id": {
+    "$oid": "6749fcd3fe47983058c544d2"
+  },
+  "title": "The Girl with the Dragon Tattoo",
+  "author": "Stieg Larsson",
+  "price": 14.99
+}]
