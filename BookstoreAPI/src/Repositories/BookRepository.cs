@@ -1,6 +1,7 @@
 using BookstoreAPI.Configuration;
 using BookstoreAPI.Models;
 using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace BookstoreAPI.Repositories
 {
@@ -14,20 +15,36 @@ namespace BookstoreAPI.Repositories
             _books = database.GetCollection<Book>(settings.BooksCollectionName);
         }
 
-        public async Task<List<Book>> GetAllAsync() =>
-            await _books.Find(_ => true).ToListAsync();
+        public async Task<List<Book>> GetAllBooksAsync(int pageNumber, int pageSize) {
+            return await _books.Find(b => true)
+                .Skip((pageNumber - 1) * pageSize)
+                .Limit(pageSize)
+                .ToListAsync();
+        }
 
-        public async Task<Book?> GetByIdAsync(string id) =>
+        public async Task<Book?> GetBookByIdAsync(string id) =>
             await _books.Find(b => b.Id == id).FirstOrDefaultAsync();
 
-        public async Task CreateAsync(Book book) =>
+        public async Task CreateBookAsync(Book book) =>
             await _books.InsertOneAsync(book);
 
-        public async Task UpdateAsync(string id, Book book) =>
+        public async Task UpdatBookAsync(string id, Book book) =>
             await _books.ReplaceOneAsync(b => b.Id == id, book);
 
-        public async Task DeleteAsync(string id) =>
+        public async Task DeleteBookAsync(string id) =>
             await _books.DeleteOneAsync(b => b.Id == id);
+
+        public async Task<int> GetTotalBooksAsync()
+        {
+            long count = await _books.CountDocumentsAsync(new BsonDocument());
+            
+            if (count > int.MaxValue)
+            {
+                throw new InvalidOperationException("The total number of documents exceeds the maximum value of int.");
+            }
+
+            return (int)count;
+        }
     }
 }
 

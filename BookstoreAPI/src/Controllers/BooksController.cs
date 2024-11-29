@@ -18,12 +18,22 @@ namespace BookstoreAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Book>>> GetAllBooks()
+        public async Task<ActionResult<List<Book>>> GetAllBooks(int pageNumber = 1, int pageSize = 5)
         {
             try
             {
-                var books = await _bookService.GetAllBooksAsync();
-                return Ok(books);
+                if (pageNumber < 1 || pageSize < 1)
+                {
+                    return BadRequest("Page number and page size must be greater than 0.");
+                }
+                
+                var books = await _bookService.GetAllBooksAsync(pageNumber, pageSize);
+                var totalBooks = await _bookService.GetTotalBooksAsync();
+
+                return Ok(new {
+                    books,
+                    totalBooks,
+                });
             }
             catch (Exception ex)
             {
@@ -31,6 +41,7 @@ namespace BookstoreAPI.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Book>> GetBook(string id)

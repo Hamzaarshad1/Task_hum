@@ -11,13 +11,13 @@ namespace BookstoreAPI.Models
         public string? Id { get; set; }
 
         [Required]
-        [BsonElement("Title")]
+        [BsonElement("title")]
         public string Title { get; set; } = null!;
 
-        [BsonElement("Author")]
+        [BsonElement("author")]
         public string Author { get; set; } = null!;
 
-        [BsonElement("Price")]
+        [BsonElement("price")]
         public decimal Price { get; set; }
     }
 }

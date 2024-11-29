@@ -4,11 +4,12 @@ namespace BookstoreAPI.Repositories
 {
     public interface IBookRepository
     {
-        Task<List<Book>> GetAllAsync();
-        Task<Book?> GetByIdAsync(string id);
-        Task CreateAsync(Book book);
-        Task UpdateAsync(string id, Book book);
-        Task DeleteAsync(string id);
+        Task<List<Book>> GetAllBooksAsync(int pageNumber, int pageSize);
+        Task<Book?> GetBookByIdAsync(string id);
+        Task CreateBookAsync(Book book);
+        Task UpdatBookAsync(string id, Book book);
+        Task DeleteBookAsync(string id);
+        Task<int> GetTotalBooksAsync();
     }
 }
 
