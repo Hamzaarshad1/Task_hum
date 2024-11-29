@@ -28,3 +28,17 @@ Each README file is located in its respective folder: Backend(BookstoreAPI) and 
 ## How to Deploy on AWS
 
     Added the deployment instructions in the respective readme
+
+### UI
+
+Home page
+
+![alt text](image.png)
+
+Update book
+
+![alt text](image-1.png)
+
+Add new book
+
+![alt text](image-2.png)
