@@ -1,4 +1,4 @@
-###General README Overview
+### General README Overview
 
 It allows users to perform CRUD (Create, Read, Update, Delete) operations on the database through frontend application.
 Each README file is located in its respective folder: Backend(BookstoreAPI) and Frontend(bookstore-frontend)
@@ -8,6 +8,14 @@ Each README file is located in its respective folder: Backend(BookstoreAPI) and 
    VS Code
    Programming languages .NET, Node, Angular .
    Databases or cloud services (MongoDB)
+
+## Backend Readme
+
+    https://github.com/Hamzaarshad1/Task_hum/blob/3363c836593e51bee1f376230ca570ccbaaff0eb/BookstoreAPI/ReadME.md
+
+## Frontend Readme
+
+    https://github.com/Hamzaarshad1/bookstore-frontend/blob/88aa5729d8c7087856c4b953527e01b0076af4af/README.md
 
 ## How to Make the Project Runnable
 
