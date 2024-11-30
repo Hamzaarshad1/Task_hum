@@ -1,5 +1,6 @@
 using BookstoreAPI.Controllers;
 using BookstoreAPI.Models;
+using BookstoreAPI.Repositories;
 using BookstoreAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,15 +8,17 @@ using Moq;
 
 public class BooksControllerTests
 {
-    private readonly Mock<IBookService> _bookServiceMock;
+    private readonly Mock<IBookRepository> _bookRepositoryMock;
     private readonly Mock<ILogger<BooksController>> _loggerMock;
+    private readonly IBookService _bookService;
     private readonly BooksController _controller;
 
     public BooksControllerTests()
     {
-        _bookServiceMock = new Mock<IBookService>();
+        _bookRepositoryMock = new Mock<IBookRepository>();
+        _bookService = new BookService(_bookRepositoryMock.Object);
         _loggerMock = new Mock<ILogger<BooksController>>();
-        _controller = new BooksController(_bookServiceMock.Object, _loggerMock.Object);
+        _controller = new BooksController(_bookService, _loggerMock.Object);
     }
 
     [Fact]
@@ -27,8 +30,8 @@ public class BooksControllerTests
             new Book { Id = "1", Title = "Sample Book 1" },
             new Book { Id = "2", Title = "Sample Book 2" }
         };
-        _bookServiceMock.Setup(s => s.GetAllBooksAsync(1, 5)).ReturnsAsync(books);
-        _bookServiceMock.Setup(s => s.GetTotalBooksAsync()).ReturnsAsync(1);
+        _bookRepositoryMock.Setup(repository => repository.GetAllBooksAsync(1, 5)).ReturnsAsync(books);
+         _bookRepositoryMock.Setup(repository => repository.GetTotalBooksAsync()).ReturnsAsync(1);
 
         // Act
         var result = await _controller.GetAllBooks(1, 5);
@@ -55,10 +58,32 @@ public class BooksControllerTests
     }
 
     [Fact]
+    public async Task GetAllBooks_ReturnsBadRequest_OnInvalidPageNumber()
+    {
+        // Act
+        var result = await _controller.GetAllBooks(0, 1);
+
+        // Assert
+        Assert.IsType<BadRequestObjectResult>(result.Result);
+
+    }
+
+    [Fact]
+    public async Task GetAllBooks_ReturnsBadRequest_OnInvalidPageSize()
+    {
+        // Act
+        var result = await _controller.GetAllBooks(1, 0);
+
+        // Assert
+        Assert.IsType<BadRequestObjectResult>(result.Result);
+    }
+
+
+    [Fact]
     public async Task GetAllBooks_ReturnsInternalServerError_OnException()
     {
         // Arrange
-        _bookServiceMock.Setup(service => service.GetAllBooksAsync(1,5))
+        _bookRepositoryMock.Setup(repository => repository.GetAllBooksAsync(1,5))
             .ThrowsAsync(new Exception("Database error"));
 
         // Act
@@ -67,6 +92,18 @@ public class BooksControllerTests
         // Assert
         var statusCodeResult = Assert.IsType<ObjectResult>(result.Result);
         Assert.Equal(500, statusCodeResult.StatusCode);
+
+        Assert.Equal("An error occurred while processing your request.", statusCodeResult.Value);
+        
+        // logger should be called once with LogLevel.Error
+        _loggerMock.Verify(
+            logger => logger.Log(
+                LogLevel.Error,
+                It.IsAny<EventId>(),
+                It.IsAny<It.IsAnyType>(),
+                It.IsAny<Exception>(),
+                (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
+            Times.Once);
     }
 
     [Fact]
@@ -75,7 +112,7 @@ public class BooksControllerTests
         // Arrange
         var book = new Book { Id = "1", Title = "Sample Book" };
 
-        _bookServiceMock.Setup(service => service.GetBookByIdAsync("1"))
+        _bookRepositoryMock.Setup(repository => repository.GetBookByIdAsync("1"))
             .ReturnsAsync(book);
 
         // Act
@@ -91,7 +128,7 @@ public class BooksControllerTests
     public async Task GetBook_ReturnsNotFound_WhenBookDoesNotExist()
     {
         // Arrange
-        _bookServiceMock.Setup(service => service.GetBookByIdAsync("1"))
+        _bookRepositoryMock.Setup(repository => repository.GetBookByIdAsync("1"))
             .ReturnsAsync((Book)null);
 
         // Act
@@ -102,12 +139,28 @@ public class BooksControllerTests
     }
 
     [Fact]
+    public async Task GetBook_ReturnsInternalServerError_OnException()
+    {
+        // Arrange
+        _bookRepositoryMock.Setup(repository => repository.GetBookByIdAsync("1"))
+            .ThrowsAsync(new Exception("Database error"));
+
+        // Act
+        var result = await _controller.GetBook("1");
+
+        // Assert
+        var statusCodeResult = Assert.IsType<ObjectResult>(result.Result);
+        Assert.Equal(500, statusCodeResult.StatusCode);
+        Assert.Equal("An error occurred while processing your request.", statusCodeResult.Value);
+    }
+
+    [Fact]
     public async Task CreateBook_ReturnsCreatedAtActionResult_WithCreatedBook()
     {
         // Arrange
         var book = new Book { Id = "1", Title = "New Book" };
 
-        _bookServiceMock.Setup(service => service.CreateBookAsync(book))
+        _bookRepositoryMock.Setup(repository => repository.CreateBookAsync(book))
             .Returns(Task.CompletedTask);
 
         // Act
@@ -125,7 +178,7 @@ public class BooksControllerTests
         // Arrange
         var book = new Book { Title = "New Book" };
 
-        _bookServiceMock.Setup(service => service.CreateBookAsync(book))
+        _bookRepositoryMock.Setup(repository => repository.CreateBookAsync(book))
             .ThrowsAsync(new Exception("Error saving to database"));
 
         // Act
@@ -143,9 +196,9 @@ public class BooksControllerTests
         var existingBook = new Book { Id = "1", Title = "Existing Book" };
         var updatedBook = new Book { Title = "Updated Book" };
 
-        _bookServiceMock.Setup(service => service.GetBookByIdAsync("1"))
+        _bookRepositoryMock.Setup(repository=> repository.GetBookByIdAsync("1"))
             .ReturnsAsync(existingBook);
-        _bookServiceMock.Setup(service => service.UpdateBookAsync("1", updatedBook))
+        _bookRepositoryMock.Setup(repository => repository.UpdatBookAsync("1", updatedBook))
             .Returns(Task.CompletedTask);
 
         // Act
@@ -161,7 +214,7 @@ public class BooksControllerTests
         // Arrange
         var updatedBook = new Book { Title = "Updated Book" };
 
-        _bookServiceMock.Setup(service => service.GetBookByIdAsync("1"))
+        _bookRepositoryMock.Setup(repository => repository.GetBookByIdAsync("1"))
             .ReturnsAsync((Book)null);
 
         // Act
@@ -177,9 +230,9 @@ public class BooksControllerTests
         // Arrange
         var existingBook = new Book { Id = "1", Title = "Book to Delete" };
 
-        _bookServiceMock.Setup(service => service.GetBookByIdAsync("1"))
+        _bookRepositoryMock.Setup(repository => repository.GetBookByIdAsync("1"))
             .ReturnsAsync(existingBook);
-        _bookServiceMock.Setup(service => service.DeleteBookAsync("1"))
+        _bookRepositoryMock.Setup(repository => repository.DeleteBookAsync("1"))
             .Returns(Task.CompletedTask);
 
         // Act
@@ -193,7 +246,7 @@ public class BooksControllerTests
     public async Task DeleteBook_ReturnsNotFound_WhenBookDoesNotExist()
     {
         // Arrange
-        _bookServiceMock.Setup(service => service.GetBookByIdAsync("1"))
+        _bookRepositoryMock.Setup(repository => repository.GetBookByIdAsync("1"))
             .ReturnsAsync((Book)null);
 
         // Act
@@ -201,5 +254,20 @@ public class BooksControllerTests
 
         // Assert
         Assert.IsType<NotFoundResult>(result);
+    }
+
+    [Fact]
+    public async Task DeleteBook_ReturnsInternalServerError_OnException()
+    {
+        // Arrange
+        _bookRepositoryMock.Setup(repository => repository.GetBookByIdAsync("1"))
+            .ThrowsAsync(new Exception("Database error"));
+
+        // Act
+        var result = await _controller.DeleteBook("1");
+
+        // Assert
+        var statusCodeResult = Assert.IsType<ObjectResult>(result);
+        Assert.Equal(500, statusCodeResult.StatusCode);
     }
 }
